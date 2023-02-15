@@ -14,7 +14,11 @@
 /* Create an empty queue */
 struct list_head *q_new()
 {
-    return NULL;
+    struct list_head *q = malloc(sizeof(struct list_head));
+    if (!q)
+        return NULL;
+    INIT_LIST_HEAD(q);
+    return q;
 }
 
 /* Free all storage used by queue */
@@ -23,13 +27,34 @@ void q_free(struct list_head *l) {}
 /* Insert an element at head of queue */
 bool q_insert_head(struct list_head *head, char *s)
 {
+    element_t *newnode = malloc(sizeof(element_t));
+    if (!newnode)
+        return false;
+    int s_len = strlen(s) + 1;
+    newnode -> value = malloc(sizeof(char) * (s_len));
+    if (!newnode -> value) {
+        free(newnode);
+        return false;
+    }
+    memcpy(newnode -> value, s, s_len);
+    list_add(&newnode -> list, head);
     return true;
 }
 
 /* Insert an element at tail of queue */
 bool q_insert_tail(struct list_head *head, char *s)
 {
-    
+    element_t *newnode = malloc(sizeof(element_t));
+    if (!newnode)
+        return false;
+    int s_len = strlen(s) + 1;
+    newnode -> value = malloc(sizeof(char) * (s_len));
+    if (!newnode -> value) {
+        free(newnode);
+        return false;
+    }
+    memcpy(newnode -> value, s, s_len);
+    list_add_tail(&newnode -> list, head);
     return true;
 }
 
@@ -48,7 +73,13 @@ element_t *q_remove_tail(struct list_head *head, char *sp, size_t bufsize)
 /* Return number of elements in queue */
 int q_size(struct list_head *head)
 {
-    return -1;
+    if (!head)
+        return 0;
+    int cnt = 0;
+    struct list_head *temp;
+    list_for_each(temp, head)
+        cnt += 1;
+    return cnt;
 }
 
 /* Delete the middle node in queue */
@@ -72,7 +103,20 @@ void q_swap(struct list_head *head)
 }
 
 /* Reverse elements in queue */
-void q_reverse(struct list_head *head) {}
+void q_reverse(struct list_head *head) {
+
+    if (!head)
+        return;
+    struct list_head *cur = head;
+    struct list_head *next = head -> next;
+    do {
+
+        cur -> next = cur -> prev;
+        cur -> prev = next;
+        cur = next;
+        next = cur -> next;
+    }while (cur != head);
+}
 
 /* Reverse the nodes of the list k at a time */
 void q_reverseK(struct list_head *head, int k)
@@ -80,6 +124,18 @@ void q_reverseK(struct list_head *head, int k)
     // https://leetcode.com/problems/reverse-nodes-in-k-group/
 }
 
+// struct list_head* merge(struct list_head *a, struct list_head *b)
+// {
+//     if (!a)
+//         return b;
+//     if (!b)
+//         return a;
+//     struct list_head *temp;
+
+//     while (a && b) {
+//         if (a -> val < b -> )
+//     }
+// }
 /* Sort elements of queue in ascending order */
 void q_sort(struct list_head *head) {}
 
