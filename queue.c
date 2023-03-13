@@ -285,5 +285,5 @@ int q_merge(struct list_head *head)
     q_sort(&tmp);
     list_splice(&tmp, list_first_entry(head, queue_contex_t, chain)->q);
     // https://leetcode.com/problems/merge-k-sorted-lists/
-    return 0;
+    return size;
 }
