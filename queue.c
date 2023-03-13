@@ -160,6 +160,7 @@ bool q_delete_dup(struct list_head *head)
 /* Swap every two adjacent nodes */
 void q_swap(struct list_head *head)
 {
+    q_reverseK(head, 2);
     // https://leetcode.com/problems/swap-nodes-in-pairs/
 }
 
@@ -171,7 +172,6 @@ void q_reverse(struct list_head *head) {
     struct list_head *cur = head;
     struct list_head *next = head -> next;
     do {
-
         cur -> next = cur -> prev;
         cur -> prev = next;
         cur = next;
@@ -179,9 +179,38 @@ void q_reverse(struct list_head *head) {
     }while (cur != head);
 }
 
+int length(struct list_head *start, struct list_head *head) {
+    int cnt = 0;
+    while (start != head) {
+        cnt += 1;
+        start = start->next;
+    }
+    cnt += 1;
+    return cnt;
+}
 /* Reverse the nodes of the list k at a time */
 void q_reverseK(struct list_head *head, int k)
 {
+    if (k <= 1 || list_empty(head))
+        return;
+    int cnt = 0;
+    struct list_head *cur = head->next, *start = head, *next;
+    LIST_HEAD(rev);
+    while (cur != head) {
+        while (cnt < k - 1  && cur != head && cur->next != head) {
+            cur = cur->next;
+            cnt += 1;
+        }
+        cnt = 0;
+        next = cur->next;
+        if (length(start, cur) >= k) {
+            list_cut_position(&rev, start, cur);
+            q_reverse(&rev);
+            list_splice_init(&rev, start);
+        }
+        cur = next;
+        start = next->prev;
+    }
     // https://leetcode.com/problems/reverse-nodes-in-k-group/
 }
 
