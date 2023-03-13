@@ -185,7 +185,6 @@ int length(struct list_head *start, struct list_head *head) {
         cnt += 1;
         start = start->next;
     }
-    cnt += 1;
     return cnt;
 }
 /* Reverse the nodes of the list k at a time */
